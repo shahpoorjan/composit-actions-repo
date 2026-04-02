@@ -1,0 +1,13 @@
+name: "Docker Build"
+inputs:
+  image-name:
+    required: true
+run:
+  using: "composite"
+  steps:
+    - name: Build docker image
+      shell: bash
+      run: docker build -t ${{ input.image-name }}:${{ github.sha }} .
+    - name: list images
+      shell: bash
+      run: docker images
