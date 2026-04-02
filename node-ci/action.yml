@@ -1,0 +1,22 @@
+name: "Node CI"
+description: "Install dependencies and run tests"
+
+inputs:
+  node-version:
+    default: "18"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Install Dependencies
+      shell: bash
+      run: npm install
+
+    - name: Run Tests
+      shell: bash
+      run: npm test
