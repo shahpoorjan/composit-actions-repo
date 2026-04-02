@@ -1,5 +1,5 @@
 name: "Docker Build"
-description: "Builds a Docker image and lists local Docker images"
+description: "Build Docker image with caching"
 
 inputs:
   image-name:
@@ -9,9 +9,17 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Build docker image
-      shell: bash
-      run: docker build -t ${{ inputs.image-name }}:${{ github.sha }} .
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build with cache
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: false
+        tags: ${{ inputs.image-name }}:${{ github.sha }}
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
 
     - name: List images
       shell: bash
